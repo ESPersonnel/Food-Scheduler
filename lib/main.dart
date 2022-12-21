@@ -66,7 +66,7 @@ class _MealsScreenState extends State<MealsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Meals'),
+        title: Text(widget.day),
       ),
       body: Column(
         children: <Widget>[
@@ -116,19 +116,54 @@ class _MealsScreenState extends State<MealsScreen> {
               );
             },
           ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+              child: Text('Add Meal'),
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    return Container(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TextButton(
+                            child: Text('Add Breakfast'),
+                            onPressed: () {
+                              Navigator.pop(context);
+                              _showAddMealDialog(context, meals: _breakfastMeals);
+                            },
+                          ),
+                          TextButton(
+                            child: Text('Add Dinner'),
+                            onPressed: () {
+                              Navigator.pop(context);
+                              _showAddMealDialog(context, meals: _dinnerMeals);
+                            },
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () {
-          _showAddMealDialog(context);
-        },
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   child: const Icon(Icons.add),
+      //   onPressed: () {
+      //     _showAddMealDialog(context, meals: []);
+      //   },
+      // ),
     );
   }
 
   // function to show a dialog to add a new meal
-  void _showAddMealDialog(BuildContext context) {
+  void _showAddMealDialog(BuildContext context, {required List<Meal> meals}) {
     final mealNameController = TextEditingController();
     showDialog(
       context: context,
@@ -152,7 +187,7 @@ class _MealsScreenState extends State<MealsScreen> {
                 // add the new meal to the list of meals
                 final meal = Meal(mealNameController.text);
                 setState(() {
-                  _breakfastMeals.add(meal);
+                  meals.add(meal);
                 });
                 Navigator.pop(context);
               },
