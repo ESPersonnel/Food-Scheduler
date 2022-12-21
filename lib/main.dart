@@ -48,18 +48,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+  final _meals = <Meal>[]; // The list of meals
 
   @override
   Widget build(BuildContext context) {
@@ -75,41 +64,146 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+      body: ListView.builder(
+        itemCount: _meals.length,
+        itemBuilder: (context, index) {
+          final meal = _meals[index];
+          return ListTile(
+            title: Text(meal.name),
+            trailing: IconButton(
+              icon: Icon(Icons.edit),
+              onPressed: () {
+                // code to edit the meal
+                _showEditMealDialog(context, meal);
+              },
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
+            onLongPress: () {
+              // code to delete the meal
+              _showDeleteMealDialog(context, meal);
+            },
+          );
+        },
       ),
+
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
+        onPressed: () {
+          _showAddMealDialog(context);
+        },
+        tooltip: 'Add Meal',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  // function to show a dialog to add a new meal
+  void _showAddMealDialog(BuildContext context) {
+    final mealNameController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Add Meal'),
+          content: TextField(
+            controller: mealNameController,
+            decoration: InputDecoration(hintText: 'Meal name'),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            TextButton(
+              child: Text('Add'),
+              onPressed: () {
+                // add the new meal to the list of meals
+                final meal = Meal(mealNameController.text);
+                setState(() {
+                  _meals.add(meal);
+                });
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // function to show a dialog to edit a meal
+  void _showEditMealDialog(BuildContext context, Meal meal) {
+    final mealNameController = TextEditingController(text: meal.name);
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Edit Meal'),
+          content: TextField(
+            controller: mealNameController,
+            decoration: InputDecoration(hintText: 'Meal name'),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            TextButton(
+              child: Text('Save'),
+              onPressed: () {
+                // update the meal with the new name
+                setState(() {
+                  meal.name = mealNameController.text;
+                });
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // function to show a dialog to delete a meal
+  void _showDeleteMealDialog(BuildContext context, Meal meal) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Delete Meal'),
+          content: Text('Are you sure you want to delete this meal?'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            TextButton(
+              child: Text('Delete'),
+              onPressed: () {
+                // remove the meal from the list of meals
+                setState(() {
+                  _meals.remove(meal);
+                });
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class Meal {
+  String name;
+
+  Meal(this.name);
+
+  setName(String newName) {
+    name = newName;
   }
 }
