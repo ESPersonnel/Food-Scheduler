@@ -4,6 +4,10 @@ This is a simple food scheduler that I use to keep track of what I eat and when 
 > Definition might change as I see fit for the project as I go along.
 > Hopefully, I'll actually finish this project.
 
+## Demo Video
+
+![Demo Video](https://user-images.githubusercontent.com/32311475/208905606-62b8a8c9-8971-47ae-b220-89d7a42b7272.mp4)
+
 ## Installation
 
 This is a Flutter project, so you'll need to install Flutter to run it. You can find instructions on how to do that [here](https://flutter.dev/docs/get-started/install). Once you have Flutter installed, you can run the project by running the following command in the root directory of the project:
