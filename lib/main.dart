@@ -174,6 +174,14 @@ class _MealsScreenState extends State<MealsScreen> {
           content: TextField(
             controller: mealNameController,
             decoration: const InputDecoration(hintText: 'Meal name'),
+            onSubmitted: (value) {
+            // add the new meal to the list of meals
+            final meal = Meal(value);
+            setState(() {
+              meals.add(meal);
+            });
+            Navigator.pop(context);
+          },
           ),
           actions: <Widget>[
             TextButton(
@@ -227,6 +235,13 @@ class _MealsScreenState extends State<MealsScreen> {
           content: TextField(
             controller: mealNameController,
             decoration: const InputDecoration(hintText: 'Meal name'),
+            onSubmitted: (value) {
+              // add the new meal to the list of meals
+              setState(() {
+                meal.name = value;
+              });
+              Navigator.pop(context);
+            },
           ),
           actions: actions2,
         );
