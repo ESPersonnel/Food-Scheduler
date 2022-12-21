@@ -1,97 +1,129 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Food Scheduler',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Food Scheduler'),
+      home: HomeScreen(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class HomeScreen extends StatelessWidget {
+  final _days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  final _meals = <Meal>[]; // The list of meals
+  HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: const Text('Food Scheduler'),
       ),
       body: ListView.builder(
-        itemCount: _meals.length,
+        itemCount: _days.length,
         itemBuilder: (context, index) {
-          final meal = _meals[index];
+          final day = _days[index];
           return ListTile(
-            title: Text(meal.name),
-            trailing: IconButton(
-              icon: Icon(Icons.edit),
-              onPressed: () {
-                // code to edit the meal
-                _showEditMealDialog(context, meal);
-              },
-            ),
-            onLongPress: () {
-              // code to delete the meal
-              _showDeleteMealDialog(context, meal);
+            title: Text(day),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MealsScreen(day: day),
+                ),
+              );
             },
           );
         },
       ),
+    );
+  }
+}
 
+class MealsScreen extends StatefulWidget {
+  final String day;
+
+  const MealsScreen({Key? key, required this.day}) : super(key: key);
+
+  @override
+  _MealsScreenState createState() => _MealsScreenState();
+}
+
+class _MealsScreenState extends State<MealsScreen> {
+  final _breakfastMeals = <Meal>[];
+  final _dinnerMeals = <Meal>[];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Meals'),
+      ),
+      body: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('Breakfast', style: Theme.of(context).textTheme.headline5),
+          ),
+          ListView.builder(
+            shrinkWrap: true,
+            itemCount: _breakfastMeals.length,
+            itemBuilder: (context, index) {
+              final meal = _breakfastMeals[index];
+              return ListTile(
+                title: Text(meal.name),
+                trailing: IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () {
+                    _showEditMealDialog(context, meal);
+                  },
+                ),
+                onLongPress: () {
+                  _showDeleteMealDialog(context, meal);
+                },
+              );
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('Dinner', style: Theme.of(context).textTheme.headline5),
+          ),
+          ListView.builder(
+            shrinkWrap: true,
+            itemCount: _dinnerMeals.length,
+            itemBuilder: (context, index) {
+              final meal = _dinnerMeals[index];
+              return ListTile(
+                title: Text(meal.name),
+                trailing: IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () {
+                    _showEditMealDialog(context, meal);
+                  },
+                ),
+                onLongPress: () {
+                  _showDeleteMealDialog(context, meal);
+                },
+              );
+            },
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
         onPressed: () {
           _showAddMealDialog(context);
         },
-        tooltip: 'Add Meal',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 
