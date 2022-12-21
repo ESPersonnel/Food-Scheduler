@@ -134,25 +134,25 @@ class _MealsScreenState extends State<MealsScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Add Meal'),
+          title: const Text('Add Meal'),
           content: TextField(
             controller: mealNameController,
-            decoration: InputDecoration(hintText: 'Meal name'),
+            decoration: const InputDecoration(hintText: 'Meal name'),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
               onPressed: () {
                 Navigator.pop(context);
               },
             ),
             TextButton(
-              child: Text('Add'),
+              child: const Text('Add'),
               onPressed: () {
                 // add the new meal to the list of meals
                 final meal = Meal(mealNameController.text);
                 setState(() {
-                  _meals.add(meal);
+                  _breakfastMeals.add(meal);
                 });
                 Navigator.pop(context);
               },
@@ -169,30 +169,30 @@ class _MealsScreenState extends State<MealsScreen> {
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text('Edit Meal'),
-          content: TextField(
-            controller: mealNameController,
-            decoration: InputDecoration(hintText: 'Meal name'),
-          ),
-          actions: <Widget>[
+        var actions2 = <Widget>[
             TextButton(
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
               onPressed: () {
                 Navigator.pop(context);
               },
             ),
             TextButton(
-              child: Text('Save'),
+              child: const Text('Update'),
               onPressed: () {
-                // update the meal with the new name
                 setState(() {
                   meal.name = mealNameController.text;
                 });
                 Navigator.pop(context);
               },
             ),
-          ],
+          ];
+        return AlertDialog(
+          title: const Text('Edit Meal'),
+          content: TextField(
+            controller: mealNameController,
+            decoration: const InputDecoration(hintText: 'Meal name'),
+          ),
+          actions: actions2,
         );
       },
     );
@@ -204,21 +204,21 @@ class _MealsScreenState extends State<MealsScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Delete Meal'),
-          content: Text('Are you sure you want to delete this meal?'),
+          title: const Text('Delete Meal'),
+          content: const Text('Are you sure you want to delete this meal?'),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
               onPressed: () {
                 Navigator.pop(context);
               },
             ),
             TextButton(
-              child: Text('Delete'),
+              child: const Text('Delete'),
               onPressed: () {
-                // remove the meal from the list of meals
                 setState(() {
-                  _meals.remove(meal);
+                  _breakfastMeals.remove(meal);
+                  _dinnerMeals.remove(meal);
                 });
                 Navigator.pop(context);
               },
@@ -234,8 +234,14 @@ class Meal {
   String name;
 
   Meal(this.name);
-
-  setName(String newName) {
-    name = newName;
-  }
 }
+
+// class Meal {
+//   String name;
+
+//   Meal(this.name);
+
+//   setName(String newName) {
+//     name = newName;
+//   }
+// }
